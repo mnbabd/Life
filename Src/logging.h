@@ -17,10 +17,6 @@ extern "C"
 {
 #endif
 
-#include <stdio.h>
-#include <assert.h>
-#include <stdarg.h>
-
 typedef enum log_level
 {
     Log_Debug = 0,
@@ -31,6 +27,11 @@ typedef enum log_level
 
     Log_Level_Count
 } log_level;
+
+#ifndef LOG_LEVEL
+#define LOG_LEVEL (Log_Debug)
+#endif
+
 
 extern const char* Log_Level_Tags[];
 
@@ -43,12 +44,15 @@ extern const char* Log_Level_Tags[];
  */
 void Print_Log(log_level level, const char *format, ...);
 
-//Defining macros to call the print function with appropriate level. (Yes, I could do it all here. But that's not the point.)
-#define LOG_DEBUG(...)     Print_Log(Log_Debug, __VA_ARGS__)
-#define LOG_INFO(...)      Print_Log(Log_Info, __VA_ARGS__)
-#define LOG_WARNING(...)   Print_Log(Log_Warning, __VA_ARGS__)
-#define LOG_CRITICAL(...)  Print_Log(Log_Critical, __VA_ARGS__)
-#define LOG_FATAL(...)     Print_Log(Log_Fatal, __VA_ARGS__)
+//Only Print if enabled
+#define PRINT_IF_NEEDED(_LEVEL, ...)  {if constexpr (LOG_LEVEL <= _LEVEL) Print_Log(_LEVEL, __VA_ARGS__);}
+
+//Defining macros to call the print function with appropriate level.
+#define LOG_DEBUG(...)     PRINT_IF_NEEDED(Log_Debug, __VA_ARGS__)
+#define LOG_INFO(...)      PRINT_IF_NEEDED(Log_Info, __VA_ARGS__)
+#define LOG_WARNING(...)   PRINT_IF_NEEDED(Log_Warning, __VA_ARGS__)
+#define LOG_CRITICAL(...)  PRINT_IF_NEEDED(Log_Critical, __VA_ARGS__)
+#define LOG_FATAL(...)     PRINT_IF_NEEDED(Log_Fatal, __VA_ARGS__)
 
 
 #ifdef __cplusplus

@@ -15,6 +15,9 @@
 extern "C"
 {
 #endif
+#include <assert.h>
+#include <stdio.h>
+#include <stdarg.h>
 
 const char* Log_Level_Tags[] = {
 "Debug",
