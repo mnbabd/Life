@@ -9,7 +9,8 @@ ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
 )
 
 set(Life_Includes
-${Life_Includes} 
+${Life_Includes}
+${CMAKE_CURRENT_SOURCE_DIR}/logging.h
 )
 
 add_executable(life ${Life_Includes} ${Life_Sources})

@@ -7,19 +7,19 @@
  * 
  * Then again, search for meaning is never easy.
  * 
- * @copyright Copyright Muneeb (c) 2024. All Rights Reserved.
+ * @copyright Copyright (c) 2024 Muneeb - All Rights Reserved.
  * 
  */
 
-#include <iostream>
+#include "logging.h"
 
 /**
  * @brief What may cause an end to main. What is the meaning of what's left behind.
  */
-enum class life_returns : int
+enum life_returns
 {
-    screech = -1, /*!< Life has collapsed in on itself. An unforeseen annihilation. */
-    move_on = 0,  /*!< Peacefully moved on. What some may consider a Success. */
+    Screech = -1, /*!< Life has collapsed in on itself. An unforeseen annihilation. */
+    Move_On = 0,  /*!< Peacefully moved on. What some may consider a Success. */
 };
 
 
@@ -32,5 +32,18 @@ enum class life_returns : int
  */
 int main(int argc, char* argv[])
 {
+    //Well lets print us a nice looking banner.
+    printf(R"(
+                                    
+      _|       _|     _|_|          
+      _|            _|       _|_|   
+      _|       _| _|_|_|_| _|_|_|_| 
+      _|       _|   _|     _|       
+      _|_|_|_| _|   _|       _|_|_| 
+)""\r\n\n\n");
 
+    Print_Log(Log_Info, "Hello?");
+
+
+    return Move_On;
 }
