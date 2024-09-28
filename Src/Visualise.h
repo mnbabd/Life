@@ -10,7 +10,6 @@
 #define VISUALISE_H
 
 #include <GL/glut.h>
-#include "logging.h"
 
 class Visualise
 {

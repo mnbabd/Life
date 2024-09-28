@@ -8,6 +8,9 @@
 
 #include "Visualise.h"
 
+#define LOG_LEVEL (Log_Debug)
+#include "logging.h"
+
 //callback to render the desired details
 void render();
 
@@ -36,7 +39,7 @@ void Visualise::display_init()
 
 void render()
 {
-    // LOG_DEBUG("display triggered");
+    LOG_DEBUG("display triggered");
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity(); // Reset The Projection Matrix
 

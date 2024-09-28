@@ -11,8 +11,12 @@
  * 
  */
 
-#include "logging.h"
 #include "Visualise.h"
+
+#define LOG_LEVEL (Log_Info)
+#include "logging.h"
+
+#include <stdio.h>
 
 /**
  * @brief What may cause an end to main. What is the meaning of what's left behind.
