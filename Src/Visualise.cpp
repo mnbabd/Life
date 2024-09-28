@@ -38,17 +38,27 @@ Visualise::~Visualise()
     }
 }
 
+void Visualise::Update()
+{
+    if(m_simulation)
+    {
+        m_simulation->Tick();
+        glutPostRedisplay();
+    }
+}
+
 void Visualise::Draw()
 {
     if(m_simulation == nullptr)
     {
+        //Tries to achieve squarity
         Sim_Init();
     }
 
     uint16_t rows = m_simulation->Get_Rows();
     uint16_t cols = m_simulation->Get_Cols();
 
-    //non-square for now
+    //does not ensure squarity
     static double x_size = (2.0 / (double)cols);
     static double y_size = (2.0 / (double)rows);
 
@@ -77,17 +87,16 @@ void Visualise::Draw()
 void Visualise::Display_Init()
 {
     //We ignore any glut compatible args provided.
-    int argc = 0;
-    char* argv[] = {};
-    glutInit(&argc, argv);
+    
     glutInitDisplayMode(GLUT_RGBA | GLUT_SINGLE); // Use single display buffer.
     glutInitWindowSize(1980, 1080);
     glutInitWindowPosition(100, 100);
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f );
     glutCreateWindow("Life");
     glutFullScreen();
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glLoadIdentity(); // Reset The Projection Matrix
     glutDisplayFunc(render);
-    glutMainLoop();
 }
 
 void Visualise::Sim_Init()
@@ -95,24 +104,25 @@ void Visualise::Sim_Init()
     int width = glutGet(GLUT_WINDOW_WIDTH);
     int height = glutGet(GLUT_WINDOW_HEIGHT);
 
-    int granularity = 50;
+    Simulation* sim = nullptr;
+
+    int granularity = 75;
     if(width > height)
     {
-        m_simulation = new Simulation(granularity, (double)granularity * ((double)width/(double)height));
+        sim = new Simulation(granularity, (double)granularity * ((double)width/(double)height));
     }
     else
     {
-        m_simulation = new Simulation((double)granularity * ((double)height/(double)width),granularity);
+        sim = new Simulation((double)granularity * ((double)height/(double)width),granularity);
     }
     //[todo] make it based on resolution
-    m_simulation->Init();
+    sim->Init();
+    m_simulation = sim;
 }
 
 void render()
 {
     LOG_DEBUG("display triggered");
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glLoadIdentity(); // Reset The Projection Matrix
 
     if(vis_obj)
     {
@@ -120,5 +130,6 @@ void render()
     }
 
     glFlush();
+    glFinish();
     // glutSwapBuffers();
 }

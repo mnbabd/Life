@@ -11,10 +11,11 @@
 
 #include <stdint.h>
 #include <vector>
+#include <atomic>
 
-
-typedef std::vector<uint8_t>      vector_row_t;
-typedef std::vector<vector_row_t> vector_2D_t;
+// typedef std::vector<std::atomic<uint8_t>> vector_row_t;
+typedef std::vector<uint8_t> vector_row_t;
+typedef std::vector<vector_row_t>    vector_2D_t;
 
 class Simulation
 {

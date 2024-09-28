@@ -17,6 +17,9 @@ class Visualise
     Visualise();
     ~Visualise();
 
+
+    void Update();
+
     void Draw();
 
     protected:

@@ -16,8 +16,27 @@
 #include "Visualise.h"
 #include "Simulation.h"
 
-#define LOG_LEVEL (Log_Info)
+#define LOG_LEVEL (Log_Debug)
 #include "logging.h"
+
+#include <time.h>
+#include <GL/glut.h>
+
+#ifdef _WIN32
+#include <windows.h>
+#define sleep_ms(_T_MS) Sleep(_T_MS) /*[todo]confirm*/
+#elif linux
+#include <unistd.h>
+#define TIMESPEC_TO_MS(_TSPEC) ((_TSPEC.tv_sec * 1e3) + (_TSPEC.tv_nsec / 1e-6))
+#endif
+
+
+static Visualise* visualiser = nullptr;
+
+/**
+ * @brief 
+ */
+void Tick_Tock(int time_ms);
 
 
 /**
@@ -49,14 +68,61 @@ int main(int argc, char* argv[])
       _|_|_|_| _|   _|       _|_|_| 
 )""\r\n\n\n");
 
+    glutInit(&argc, argv);
+    
     for (int i = 0; i < argc; i++)
     {
         LOG_DEBUG("Argument#%02d: %s", i, argv[i]);
     }
 
     Visualise vis;
+    visualiser = &vis;
 
-    getchar();
+    glutTimerFunc(750, Tick_Tock, 0);
+    glutMainLoop();
+    bool running = true;
 
     return Move_On;
+}
+
+void Tick_Tock(int time_ms)
+{
+    static uint32_t t = 0;
+    static const uint32_t freq_ms = 750;
+
+    if(visualiser == nullptr)
+    {
+        //nothing to do
+        return;
+    }
+
+    LOG_DEBUG("time_ms=%d, t=%u",time_ms, t);
+    t++;
+
+    //Get current time
+    static struct timespec tv;
+    if(clock_gettime(CLOCK_REALTIME, &tv))
+        perror("error clock_gettime\n");
+    uint32_t t_ms = TIMESPEC_TO_MS(tv);
+    uint32_t t_next_ms = t_ms + freq_ms;
+
+    //The Game
+    visualiser->Update();
+
+    //Schedule next iteration
+    clock_gettime(CLOCK_REALTIME, &tv);
+    t_ms = TIMESPEC_TO_MS(tv);
+
+    //Periodic Task
+    if(t_ms < t_next_ms)
+    {
+        LOG_DEBUG("t_next_ms=%u, t_ms=%u, t_next_ms - t_ms=%u",t_next_ms, t_ms, t_next_ms - t_ms);
+        // glutTimerFunc(t_next_ms - t_ms, Tick_Tock, t_ms);
+        glutTimerFunc(freq_ms, Tick_Tock, t_ms);
+    }
+    else
+    {
+        LOG_WARNING("Overrun! (t=%d)", t);
+        glutTimerFunc(freq_ms, Tick_Tock, t_ms);
+    }
 }

@@ -24,8 +24,7 @@ m_cols(cols)
 
     //m_buffer[r][c]
     //m_buffer[y][x]
-    m_buffer = vector_2D_t(buffer_dim_y,
-    vector_row_t(buffer_dim_x));
+    m_buffer = vector_2D_t(buffer_dim_y, vector_row_t(buffer_dim_x, 0));
 }
 
 Simulation::~Simulation()
@@ -159,7 +158,7 @@ void Simulation::Tick()
     //Determine the future
     for(uint16_t r = 0; r < m_rows; r++)
     {
-        for(uint16_t c = 0; r < m_cols; c++)
+        for(uint16_t c = 0; c < m_cols; c++)
         {
             //We are determining the future of (r,c)
             uint8_t sum = Get_Neighbours(r,c);
@@ -196,5 +195,5 @@ void Simulation::Tick()
     }
 
     //deepcopy future into present
-    std::copy(future.begin(), future.end(), back_inserter(m_buffer));
+    std::copy(future.begin(), future.end(), m_buffer.begin());
 }
