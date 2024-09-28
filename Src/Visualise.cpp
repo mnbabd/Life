@@ -8,16 +8,31 @@
 
 #include "Visualise.h"
 
+#include <GL/glut.h>
+#include <assert.h>
+
 #define LOG_LEVEL (Log_Debug)
 #include "logging.h"
 
 //callback to render the desired details
 void render();
 
-Visualise::Visualise()
+static Visualise* vis_obj = nullptr;
+
+Visualise::Visualise(Simulation &sim) :
+m_simulation(sim)
 {
+    //We're limited to only one observable reality
+    assert(vis_obj == nullptr);
+    vis_obj = this;
+
     //Initialise environment
     display_init();
+}
+
+void Visualise::Draw()
+{
+
 }
 
 void Visualise::display_init()
@@ -43,7 +58,10 @@ void render()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity(); // Reset The Projection Matrix
 
-    //[todo] trigger redraw
+    if(vis_obj)
+    {
+        vis_obj->Draw();
+    }
 
     glFlush();
 }

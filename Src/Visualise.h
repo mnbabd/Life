@@ -9,18 +9,22 @@
 #ifndef VISUALISE_H
 #define VISUALISE_H
 
-#include <GL/glut.h>
+#include "Simulation.h"
 
 class Visualise
 {
     public:
-    Visualise();
+    Visualise(Simulation& sim);
+
+    void Draw();
 
     protected:
     /**
      * @brief Creates a blank fullscreen window with rendering function initialised
      */
     void display_init();
+
+    Simulation& m_simulation;
 };
 
 #endif

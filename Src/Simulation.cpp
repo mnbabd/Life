@@ -7,8 +7,11 @@
  * Copyright (c) 2024 Muneeb - All Rights Reserved.
  */
 
-#define CEIL_DIV(_X,_Y)  ((_X + _Y - 1)/_Y)
+#include <stdlib.h>
+#include <time.h>
 
+
+#define CEIL_DIV(_X,_Y)  ((_X + _Y - 1)/_Y)
 using namespace std;
 
 Simulation::Simulation(uint16_t rows, uint16_t cols) :
@@ -23,4 +26,34 @@ m_cols(cols)
 
 Simulation::~Simulation()
 {
+
+}
+
+void Simulation::Init(int32_t seed)
+{
+    if(seed)
+    {
+        srand(seed);
+    }
+    else
+    {
+        srand(time(NULL));
+    }
+
+    for(auto& row : m_buffer)
+    {
+        for(auto& octet : row)
+        {
+            int rnd = rand();
+
+            //Should roughly be half populated cells overall
+            octet = ((uint8_t*)&rnd)[0] & ((uint8_t*)&rnd)[1];
+        }
+    }
+}
+
+
+void Simulation::Tick()
+{
+    //For a tick is to be tocked, so all tocks shall tick.
 }

@@ -11,12 +11,14 @@
  * 
  */
 
+#include <stdio.h>
+
 #include "Visualise.h"
+#include "Simulation.h"
 
 #define LOG_LEVEL (Log_Info)
 #include "logging.h"
 
-#include <stdio.h>
 
 /**
  * @brief What may cause an end to main. What is the meaning of what's left behind.
@@ -52,7 +54,10 @@ int main(int argc, char* argv[])
         LOG_DEBUG("Argument#%02d: %s", i, argv[i]);
     }
 
-    Visualise vis;
+    Simulation sim(50, 50);
+    sim.Init();
+
+    Visualise vis(sim);
 
     getchar();
 

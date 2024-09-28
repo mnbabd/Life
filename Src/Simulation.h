@@ -20,6 +20,11 @@ class Simulation
 {
     public:
     Simulation(uint16_t rows, uint16_t cols);
+
+    void Init(int32_t seed = 0);
+
+    void Tick();
+
     ~Simulation();
 
     protected:
