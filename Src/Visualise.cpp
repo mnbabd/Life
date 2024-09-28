@@ -25,8 +25,6 @@ Visualise::Visualise()
     assert(vis_obj == nullptr);
     vis_obj = this;
 
-    Sim_Init();
-
     //Initialise environment
     Display_Init();
 
@@ -44,7 +42,7 @@ void Visualise::Draw()
 {
     if(m_simulation == nullptr)
     {
-        return;
+        Sim_Init();
     }
 
     uint16_t rows = m_simulation->Get_Rows();
@@ -83,19 +81,30 @@ void Visualise::Display_Init()
     char* argv[] = {};
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGBA | GLUT_SINGLE); // Use single display buffer.
-    glutInitWindowSize(300, 300);
+    glutInitWindowSize(1980, 1080);
     glutInitWindowPosition(100, 100);
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f );
     glutCreateWindow("Life");
-    // glutFullScreen();
+    glutFullScreen();
     glutDisplayFunc(render);
     glutMainLoop();
 }
 
 void Visualise::Sim_Init()
 {
+    int width = glutGet(GLUT_WINDOW_WIDTH);
+    int height = glutGet(GLUT_WINDOW_HEIGHT);
+
+    int granularity = 50;
+    if(width > height)
+    {
+        m_simulation = new Simulation(granularity, (double)granularity * ((double)width/(double)height));
+    }
+    else
+    {
+        m_simulation = new Simulation((double)granularity * ((double)height/(double)width),granularity);
+    }
     //[todo] make it based on resolution
-    m_simulation = new Simulation(50,50);
     m_simulation->Init();
 }
 
