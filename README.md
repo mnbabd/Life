@@ -1,2 +1,3 @@
-# Game_of_Life
+# Life
 Let life play out as you walk away from your screens
+
