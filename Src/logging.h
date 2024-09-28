@@ -13,6 +13,8 @@
  * 
  */
 
+#ifndef LOGGING_H
+#define LOGGING_H
 
 #include <stdio.h>
 #include <assert.h>
@@ -69,3 +71,5 @@ void Print_Log(log_level level, const char *format, ...)
     //Move on to the next line
     printf("\r\n");
 }
+
+#endif

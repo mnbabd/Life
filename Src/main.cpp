@@ -12,6 +12,7 @@
  */
 
 #include "logging.h"
+#include "Visualise.h"
 
 /**
  * @brief What may cause an end to main. What is the meaning of what's left behind.
@@ -28,7 +29,7 @@ enum life_returns
  * 
  * @param argc - How much will you argue?
  * @param argv - If only I had a place to put all these arguments.
- * @return int -  What is the meaning of what's left behind? Will life return? It has to!
+ * @return int -  What's left behind? Will life return? It has to!
  */
 int main(int argc, char* argv[])
 {
@@ -42,8 +43,14 @@ int main(int argc, char* argv[])
       _|_|_|_| _|   _|       _|_|_| 
 )""\r\n\n\n");
 
-    Print_Log(Log_Info, "Hello?");
+    for (int i = 0; i < argc; i++)
+    {
+        LOG_DEBUG("Argument#%02d: %s", i, argv[i]);
+    }
 
+    display_init(argc, argv);
+
+    getchar();
 
     return Move_On;
 }
