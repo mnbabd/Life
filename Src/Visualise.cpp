@@ -1,7 +1,7 @@
 /**
  * @file Visualise.cpp
- * @brief 
- * 
+ * @brief
+ *
  * @author Muneeb (mnb.abd@gmail.com)
  * Copyright (c) 2024 Muneeb - All Rights Reserved.
  */
@@ -19,38 +19,85 @@ void render();
 
 static Visualise* vis_obj = nullptr;
 
-Visualise::Visualise(Simulation &sim) :
-m_simulation(sim)
+Visualise::Visualise()
 {
     //We're limited to only one observable reality
     assert(vis_obj == nullptr);
     vis_obj = this;
 
+    Sim_Init();
+
     //Initialise environment
-    display_init();
+    Display_Init();
+
+}
+
+Visualise::~Visualise()
+{
+    if (m_simulation)
+    {
+        delete m_simulation;
+    }
 }
 
 void Visualise::Draw()
 {
+    if(m_simulation == nullptr)
+    {
+        return;
+    }
 
+    uint16_t rows = m_simulation->Get_Rows();
+    uint16_t cols = m_simulation->Get_Cols();
+
+    //non-square for now
+    static double x_size = (2.0 / (double)cols);
+    static double y_size = (2.0 / (double)rows);
+
+
+    for(uint16_t r = 0; r < rows; r++)
+    {
+        double y_offset = (y_size * (double)r) - 1.0;
+        for(uint16_t c = 0; c < cols; c++)
+        {
+            double x_offset = (x_size * (double)c) - 1.0;
+            bool state = m_simulation->Get_State(r,c);
+
+            if(state)
+            {
+                glColor3b(33,121,66);
+            }
+            else
+            {
+                glColor3b(3,3,11);
+            }
+            glRectd(x_offset, y_offset, x_offset + x_size, y_offset + y_size);
+        }
+    }
 }
 
-void Visualise::display_init()
+void Visualise::Display_Init()
 {
     //We ignore any glut compatible args provided.
     int argc = 0;
     char* argv[] = {};
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_SINGLE); // Use single display buffer.
+    glutInitDisplayMode(GLUT_RGBA | GLUT_SINGLE); // Use single display buffer.
     glutInitWindowSize(300, 300);
     glutInitWindowPosition(100, 100);
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f );
     glutCreateWindow("Life");
-    glutFullScreen();
+    // glutFullScreen();
     glutDisplayFunc(render);
     glutMainLoop();
 }
 
+void Visualise::Sim_Init()
+{
+    //[todo] make it based on resolution
+    m_simulation = new Simulation(50,50);
+    m_simulation->Init();
+}
 
 void render()
 {
@@ -64,4 +111,5 @@ void render()
     }
 
     glFlush();
+    // glutSwapBuffers();
 }

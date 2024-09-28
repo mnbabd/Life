@@ -14,7 +14,8 @@
 class Visualise
 {
     public:
-    Visualise(Simulation& sim);
+    Visualise();
+    ~Visualise();
 
     void Draw();
 
@@ -22,9 +23,11 @@ class Visualise
     /**
      * @brief Creates a blank fullscreen window with rendering function initialised
      */
-    void display_init();
+    void Display_Init();
 
-    Simulation& m_simulation;
+    void Sim_Init();
+    
+    Simulation* m_simulation = nullptr;
 };
 
 #endif

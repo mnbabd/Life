@@ -25,6 +25,12 @@ class Simulation
 
     void Tick();
 
+    uint16_t Get_Rows();
+
+    uint16_t Get_Cols();
+
+    bool Get_State(uint16_t row, uint16_t col);
+
     ~Simulation();
 
     protected:

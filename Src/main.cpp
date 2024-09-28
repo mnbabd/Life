@@ -54,10 +54,7 @@ int main(int argc, char* argv[])
         LOG_DEBUG("Argument#%02d: %s", i, argv[i]);
     }
 
-    Simulation sim(50, 50);
-    sim.Init();
-
-    Visualise vis(sim);
+    Visualise vis;
 
     getchar();
 

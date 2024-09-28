@@ -19,7 +19,10 @@ m_rows(rows),
 m_cols(cols)
 {
     int buffer_dim_x = CEIL_DIV(m_cols, 8);
-    int buffer_dim_y = CEIL_DIV(m_rows, 8);
+    int buffer_dim_y = m_rows;
+
+    //m_buffer[r][c]
+    //m_buffer[y][x]
     m_buffer = vector_2D_t(buffer_dim_y,
     vector_row_t(buffer_dim_x));
 }
@@ -27,6 +30,23 @@ m_cols(cols)
 Simulation::~Simulation()
 {
 
+}
+
+uint16_t Simulation::Get_Rows()
+{
+    return m_rows;
+}
+
+uint16_t Simulation::Get_Cols()
+{
+    return m_cols;
+}
+
+bool Simulation::Get_State(uint16_t row, uint16_t col)
+{
+    //Check if the relevant bit is set
+    uint8_t octet = m_buffer[row][col/8];
+    return ((octet & (1 << (col & 0b111))) != 0);
 }
 
 void Simulation::Init(int32_t seed)
