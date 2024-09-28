@@ -29,11 +29,15 @@ class Simulation
 
     uint16_t Get_Cols();
 
-    bool Get_State(uint16_t row, uint16_t col);
+    bool Get_State(int row, int col);
+
+    void Set_State(vector_2D_t& buff, int row, int col, bool alive);
 
     ~Simulation();
 
     protected:
+    uint8_t Get_Neighbours(int row, int col);
+
     const uint16_t m_rows;
     const uint16_t m_cols;
     vector_2D_t m_buffer;
