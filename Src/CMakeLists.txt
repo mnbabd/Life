@@ -1,7 +1,9 @@
 
 
 set(Life_Sources
+${CMAKE_CURRENT_SOURCE_DIR}/logging.c
 ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+${CMAKE_CURRENT_SOURCE_DIR}/Visualise.cpp
 ${CMAKE_CURRENT_SOURCE_DIR}/Simulation.cpp
 PARENT_SCOPE)
 

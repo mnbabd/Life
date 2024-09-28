@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.11 FATAL_ERROR)
-project(Life CXX)
+project(Life CXX C)
 
 add_subdirectory(Src)
 

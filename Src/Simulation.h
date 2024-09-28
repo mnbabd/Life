@@ -1,19 +1,31 @@
 /**
  * @file Simulation.h
- * @author Muneeb (mnb.abd@gmail.com)
  * @brief 
- * @version 0.1
- * @date 2024-09-28
  * 
+ * @author Muneeb (mnb.abd@gmail.com)
  * Copyright (c) 2024 Muneeb - All Rights Reserved.
- * 
  */
+
+#ifndef SIMULATION_H
+#define SIMULATION_H
+
+#include <stdint.h>
+#include <vector>
+
+
+typedef std::vector<uint8_t>      vector_row_t;
+typedef std::vector<vector_row_t> vector_2D_t;
 
 class Simulation
 {
     public:
-    Simulation();
+    Simulation(uint16_t rows, uint16_t cols);
+    ~Simulation();
 
     protected:
-    
+    const uint16_t m_rows;
+    const uint16_t m_cols;
+    vector_2D_t m_buffer;
 };
+
+#endif

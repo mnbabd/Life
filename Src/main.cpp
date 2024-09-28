@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
         LOG_DEBUG("Argument#%02d: %s", i, argv[i]);
     }
 
-    display_init(argc, argv);
+    Visualise vis;
 
     getchar();
 
