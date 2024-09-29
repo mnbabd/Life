@@ -10,10 +10,12 @@
  * @copyright Copyright (c) 2024 Muneeb - All Rights Reserved.
  */
 
-//Use CMake to set these
+
 #ifndef MAIN_LOG_LEVEL
 #define MAIN_LOG_LEVEL (Log_Info)
 #endif
+#define LOG_LEVEL MAIN_LOG_LEVEL
+#include "logging.h"
 
 
 #include "Visualise.h"
@@ -22,9 +24,6 @@
 
 #include <stdio.h>
 #include <GL/glut.h>
-
-#define LOG_LEVEL MAIN_LOG_LEVEL
-#include "logging.h"
 
 
 static Visualise* visualiser = nullptr;
@@ -84,7 +83,7 @@ int main(int argc, char* argv[])
 void Tick_Tock(int time_ms)
 {
     static uint32_t t = 0;
-    static const uint32_t freq_ms = 750;
+    static const uint32_t freq_ms = 250;
 
     if(visualiser == nullptr)
     {
@@ -92,33 +91,35 @@ void Tick_Tock(int time_ms)
         return;
     }
 
-    LOG_VERBOSE("time_ms=%d, t=%u",time_ms, t);
-    t++;
-
     //Get current time
-    static struct timespec tv;
-    if(clock_gettime(CLOCK_MONOTONIC, &tv))
-        perror("error clock_gettime\n");
-    uint32_t t_ms = TIMESPEC_TO_MS(tv);
-    uint32_t t_next_ms = t_ms + freq_ms;
+    Time_Stamp t_now = Time_Stamp::Get_CurrentTime_Epoch_ms();
+
+    //Determine next run
+    Time_Stamp t_next = t_now + freq_ms;
+    
+    LOG_VERBOSE("t_now=%" PRIu64 ", t=%u",t_now.Get_Timestamp_ms(), t);
+    t++;
 
     //The Game
     visualiser->Update();
 
-    //Schedule next iteration
-    clock_gettime(CLOCK_REALTIME, &tv);
-    t_ms = TIMESPEC_TO_MS(tv);
+    //Update current time
+    t_now.Set_To_CurrentTime();
+
+    //determine time left
+    time_ms_raw_t wait_time = t_now.MilliSeconds_To(t_next);
 
     //Periodic Task
-    if(t_ms < t_next_ms)
+    if(wait_time)
     {
-        LOG_VERBOSE("t_next_ms=%u, t_ms=%u, t_next_ms - t_ms=%u",t_next_ms, t_ms, t_next_ms - t_ms);
-        glutTimerFunc(t_next_ms - t_ms, Tick_Tock, t_ms);
+        // LOG_VERBOSE("t_next_ms=%u, t_ms=%u, t_next_ms - t_ms=%u",t_next_ms, t_ms, t_next_ms - t_ms);
+        glutTimerFunc(wait_time, Tick_Tock, 0);
+        // glutTimerFunc(t_next - t_now, Tick_Tock, t_ms);
         // glutTimerFunc(freq_ms, Tick_Tock, t_ms);
     }
     else
     {
-        LOG_WARNING("Overrun! (t=%d)", t);
-        glutTimerFunc(freq_ms, Tick_Tock, t_ms);
+        LOG_WARNING("Overrun! (t=%d, t_now=%" PRIu64 ")", t, t_now.Get_Timestamp_ms());
+        glutTimerFunc(150, Tick_Tock, 0);
     }
 }

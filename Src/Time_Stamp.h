@@ -18,20 +18,45 @@
 #define sleep_ms(_T_MS) Sleep(_T_MS) /*[todo]confirm*/
 #elif linux
 #include <unistd.h>
-#define TIMESPEC_TO_MS(_TSPEC) ((_TSPEC.tv_sec * 1e3) + (_TSPEC.tv_nsec / 1e-6))
-// #define TIMESPEC_TO_MS(_TSPEC) (_TSPEC.tv_nsec / 1e-6)
 #endif
 
+#include <atomic>
 
-typedef uint32_t time_ms_t;
+typedef uint64_t time_ms_raw_t;
+typedef std::atomic<time_ms_raw_t> time_ms_t;
 
 class Time_Stamp
 {
     public:
     Time_Stamp();
 
+    Time_Stamp(time_ms_t epoch_ms);
+
+    Time_Stamp(Time_Stamp& ts);
+
+    static time_ms_t Get_CurrentTime_Epoch_ms();
+
+    time_ms_t MilliSeconds_To(Time_Stamp& ts);
+
+    time_ms_t Get_Timestamp_ms();
+
+    void Set_Timestamp_ms(time_ms_t ts_ms);
+
+    void Set_To_CurrentTime();
+
+
+    friend bool operator<(Time_Stamp& lhs, Time_Stamp& rhs);
+
+    friend bool operator>(Time_Stamp& lhs, Time_Stamp& rhs);
+
+    Time_Stamp operator+(Time_Stamp& rhs);
+
+    Time_Stamp operator-(Time_Stamp& rhs);
+
+    Time_Stamp operator+(time_ms_raw_t rhs);
+
     protected:
-    time_ms_t m_timestamp = 0;
+    time_ms_t m_timestamp_ms = 0;
 };
 
 

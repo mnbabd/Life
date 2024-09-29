@@ -8,16 +8,16 @@
 
 #include "Visualise.h"
 
-//Use CMake to set this
+//Initialise logging for this. Use CMake Cache variables to set this.
 #ifndef VISUALISE_LOG_LEVEL
 #define VISUALISE_LOG_LEVEL (Log_Info)
 #endif
+#define LOG_LEVEL VISUALISE_LOG_LEVEL
+#include "logging.h"
 
 #include <GL/glut.h>
 #include <assert.h>
 
-#define LOG_LEVEL VISUALISE_LOG_LEVEL
-#include "logging.h"
 
 //callback to render the desired details
 void render();
@@ -82,7 +82,8 @@ void Visualise::Draw()
             }
             else
             {
-                glColor3b(3,3,11);
+                glColor3b(3,3,9);
+                // glColor3b(0,0,3);
             }
             glRectd(x_offset, y_offset, x_offset + x_size, y_offset + y_size);
         }
@@ -111,7 +112,7 @@ void Visualise::Sim_Init()
 
     Simulation* sim = nullptr;
 
-    int granularity = 75;
+    int granularity = 250;
     if(width > height)
     {
         sim = new Simulation(granularity, (double)granularity * ((double)width/(double)height));

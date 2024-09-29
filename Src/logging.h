@@ -17,6 +17,9 @@ extern "C"
 {
 #endif
 
+
+#include <inttypes.h>
+
 typedef enum log_level
 {
     Log_Verbose = 0,
