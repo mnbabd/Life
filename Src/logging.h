@@ -30,7 +30,7 @@ typedef enum log_level
 } log_level;
 
 #ifdef LOG_LEVEL_ALL
-#warning This is going to throw redefinition warnings. Let it. Override shouldn't be left in and removed when done.
+#warning "This is going to throw redefinition warnings. Let it. Override shouldn't be left in and removed when done."
 #define LOG_LEVEL (LOG_LEVEL_ALL)
 #else
 #ifndef LOG_LEVEL
