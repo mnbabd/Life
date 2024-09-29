@@ -20,6 +20,7 @@ extern "C"
 #include <stdarg.h>
 
 const char* Log_Level_Tags[] = {
+"Verbose",
 "Debug",
 "Info",
 "Warning",
