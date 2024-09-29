@@ -13,25 +13,35 @@ endif(ENABLE_ADDRESS_SANITIZER)
 
 #Setting up Logging levels [todo] extract to different file (autogenerate in the future)
 set(Debug_Levels 
-"Log_Verbose"
-"Log_Debug"
-"Log_Info"
-"Log_Warning"
-"Log_Critical"
-"Log_Fatal")
+"Verbose"
+"Debug"
+"Info"
+"Warning"
+"Critical"
+"Fatal")
 
-#Add options for all the modules using logging module
-set(LOG_LEVEL_MAIN "Log_Info"
-CACHE STRING "main.cpp log level")
-set_property(CACHE LOG_LEVEL_MAIN PROPERTY STRINGS ${Debug_Levels})
-list(FIND Debug_Levels ${LOG_LEVEL_MAIN} MAIN_LOG_LEVEL_IDX)
-add_compile_definitions(MAIN_LOG_LEVEL=${MAIN_LOG_LEVEL_IDX})
+option(OVERRIDE_LOG_LEVEL "Override log levels of all modules" OFF)
 
-set(LOG_LEVEL_VISUALISE "Log_Info"
-CACHE STRING "Visualise module log level")
-set_property(CACHE LOG_LEVEL_VISUALISE PROPERTY STRINGS ${Debug_Levels})
-list(FIND Debug_Levels ${LOG_LEVEL_VISUALISE} VISUALISE_LOG_LEVEL_IDX)
-add_compile_definitions(VISUALISE_LOG_LEVEL=${VISUALISE_LOG_LEVEL_IDX})
+if(OVERRIDE_LOG_LEVEL)
+    set(OVERRIDEN_LOG_LEVEL "Info"
+    CACHE STRING "Overriden log level of all Modules")
+    set_property(CACHE OVERRIDEN_LOG_LEVEL PROPERTY STRINGS ${Debug_Levels})
+    list(FIND Debug_Levels ${OVERRIDEN_LOG_LEVEL} ALL_LOG_LEVEL_IDX)
+    add_compile_definitions(LOG_LEVEL_ALL=${ALL_LOG_LEVEL_IDX})
+else()
+    #Add options for all the modules using logging module
+    set(LOG_LEVEL_MAIN "Info"
+    CACHE STRING "Main.cpp log level")
+    set_property(CACHE LOG_LEVEL_MAIN PROPERTY STRINGS ${Debug_Levels})
+    list(FIND Debug_Levels ${LOG_LEVEL_MAIN} MAIN_LOG_LEVEL_IDX)
+    add_compile_definitions(MAIN_LOG_LEVEL=${MAIN_LOG_LEVEL_IDX})
+
+    set(LOG_LEVEL_VISUALISE "Info"
+    CACHE STRING "Visualise module log level")
+    set_property(CACHE LOG_LEVEL_VISUALISE PROPERTY STRINGS ${Debug_Levels})
+    list(FIND Debug_Levels ${LOG_LEVEL_VISUALISE} VISUALISE_LOG_LEVEL_IDX)
+    add_compile_definitions(VISUALISE_LOG_LEVEL=${VISUALISE_LOG_LEVEL_IDX})
+endif()
 
 
 find_package(GLUT REQUIRED)
