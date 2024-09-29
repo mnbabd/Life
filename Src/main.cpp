@@ -10,6 +10,11 @@
  * @copyright Copyright (c) 2024 Muneeb - All Rights Reserved.
  */
 
+//Use CMake to set these
+#ifndef MAIN_LOG_LEVEL
+#define MAIN_LOG_LEVEL (Log_Info)
+#endif
+
 
 #include "Visualise.h"
 #include "Simulation.h"
@@ -18,9 +23,7 @@
 #include <stdio.h>
 #include <GL/glut.h>
 
-
-// #define LOG_LEVEL (Log_Debug)
-#define LOG_LEVEL (Log_Info)
+#define LOG_LEVEL MAIN_LOG_LEVEL
 #include "logging.h"
 
 

@@ -29,10 +29,14 @@ typedef enum log_level
     Log_Level_Count
 } log_level;
 
+#ifdef LOG_LEVEL_ALL
+//This is going to throw redefinition warnings. Let it. This shouldn't be left in.
+#define LOG_LEVEL (LOG_LEVEL_ALL)
+#else
 #ifndef LOG_LEVEL
 #define LOG_LEVEL (Log_Debug)
 #endif
-
+#endif
 
 extern const char* Log_Level_Tags[];
 

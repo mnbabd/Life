@@ -8,10 +8,15 @@
 
 #include "Visualise.h"
 
+//Use CMake to set this
+#ifndef VISUALISE_LOG_LEVEL
+#define VISUALISE_LOG_LEVEL (Log_Info)
+#endif
+
 #include <GL/glut.h>
 #include <assert.h>
 
-#define LOG_LEVEL (Log_Debug)
+#define LOG_LEVEL VISUALISE_LOG_LEVEL
 #include "logging.h"
 
 //callback to render the desired details
@@ -122,7 +127,8 @@ void Visualise::Sim_Init()
 
 void render()
 {
-    LOG_DEBUG("display triggered");
+    //A log in a spot like this will throttle performance
+    LOG_VERBOSE("display triggered");
 
     if(vis_obj)
     {
@@ -131,5 +137,4 @@ void render()
 
     glFlush();
     glFinish();
-    // glutSwapBuffers();
 }

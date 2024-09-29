@@ -8,6 +8,10 @@ You will have most of these already installed.
 sudo pacman -Syu base-devel glibc libc++ libc++abi linux-api-headers freeglut mesa mesa-utils glu
 ```
 
+Optional:
+```
+sudo pacman -Syu glibc-debug
+```
 # Build
 ```
 mkdir build
