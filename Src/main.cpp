@@ -8,27 +8,20 @@
  * Then again, search for meaning is never easy.
  * 
  * @copyright Copyright (c) 2024 Muneeb - All Rights Reserved.
- * 
  */
 
-#include <stdio.h>
 
 #include "Visualise.h"
 #include "Simulation.h"
+#include "Time_Stamp.h"
 
-#define LOG_LEVEL (Log_Debug)
-#include "logging.h"
-
-#include <time.h>
+#include <stdio.h>
 #include <GL/glut.h>
 
-#ifdef _WIN32
-#include <windows.h>
-#define sleep_ms(_T_MS) Sleep(_T_MS) /*[todo]confirm*/
-#elif linux
-#include <unistd.h>
-#define TIMESPEC_TO_MS(_TSPEC) ((_TSPEC.tv_sec * 1e3) + (_TSPEC.tv_nsec / 1e-6))
-#endif
+
+// #define LOG_LEVEL (Log_Debug)
+#define LOG_LEVEL (Log_Info)
+#include "logging.h"
 
 
 static Visualise* visualiser = nullptr;
@@ -72,7 +65,7 @@ int main(int argc, char* argv[])
     
     for (int i = 0; i < argc; i++)
     {
-        LOG_DEBUG("Argument#%02d: %s", i, argv[i]);
+        LOG_VERBOSE("Argument#%02d: %s", i, argv[i]);
     }
 
     Visualise vis;
@@ -96,12 +89,12 @@ void Tick_Tock(int time_ms)
         return;
     }
 
-    LOG_DEBUG("time_ms=%d, t=%u",time_ms, t);
+    LOG_VERBOSE("time_ms=%d, t=%u",time_ms, t);
     t++;
 
     //Get current time
     static struct timespec tv;
-    if(clock_gettime(CLOCK_REALTIME, &tv))
+    if(clock_gettime(CLOCK_MONOTONIC, &tv))
         perror("error clock_gettime\n");
     uint32_t t_ms = TIMESPEC_TO_MS(tv);
     uint32_t t_next_ms = t_ms + freq_ms;
@@ -116,9 +109,9 @@ void Tick_Tock(int time_ms)
     //Periodic Task
     if(t_ms < t_next_ms)
     {
-        LOG_DEBUG("t_next_ms=%u, t_ms=%u, t_next_ms - t_ms=%u",t_next_ms, t_ms, t_next_ms - t_ms);
-        // glutTimerFunc(t_next_ms - t_ms, Tick_Tock, t_ms);
-        glutTimerFunc(freq_ms, Tick_Tock, t_ms);
+        LOG_VERBOSE("t_next_ms=%u, t_ms=%u, t_next_ms - t_ms=%u",t_next_ms, t_ms, t_next_ms - t_ms);
+        glutTimerFunc(t_next_ms - t_ms, Tick_Tock, t_ms);
+        // glutTimerFunc(freq_ms, Tick_Tock, t_ms);
     }
     else
     {
