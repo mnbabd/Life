@@ -83,7 +83,7 @@ int main(int argc, char* argv[])
 void Tick_Tock(int time_ms)
 {
     static uint32_t t = 0;
-    static const uint32_t freq_ms = 250;
+    static const uint32_t freq_ms = 150;
 
     if(visualiser == nullptr)
     {
