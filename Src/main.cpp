@@ -24,9 +24,26 @@
 
 #include <stdio.h>
 #include <GL/glut.h>
+#include <csignal>
 
 
 static Visualise* visualiser = nullptr;
+
+/**
+ * @brief 
+ * 
+ * @param signum 
+ */
+void Signal_Handler( int signum );
+
+/**
+ * @brief 
+ * 
+ * @param key 
+ * @param x 
+ * @param y 
+ */
+void Input_Handler(unsigned char key, int x, int y);
 
 /**
  * @brief 
@@ -63,6 +80,9 @@ int main(int argc, char* argv[])
       _|_|_|_| _|   _|       _|_|_| 
 )""\r\n\n\n");
 
+    // register signal SIGINT to be picked up by a signal handler (Ctrl+C)
+    signal(SIGINT, Signal_Handler);  
+
     glutInit(&argc, argv);
     
     for (int i = 0; i < argc; i++)
@@ -73,11 +93,24 @@ int main(int argc, char* argv[])
     Visualise vis;
     visualiser = &vis;
 
+    glutKeyboardFunc(Input_Handler);
     glutTimerFunc(750, Tick_Tock, 0);
     glutMainLoop();
     bool running = true;
 
     return Move_On;
+}
+
+void Input_Handler(unsigned char key, int x, int y)
+{
+    LOG_VERBOSE("Pressed %c (%u)", key, key);
+    if (glutGetModifiers() == GLUT_ACTIVE_CTRL) {
+            if(key == 3)
+            {
+                LOG_INFO("Exiting");
+                exit(Move_On);
+            }
+    }
 }
 
 void Tick_Tock(int time_ms)
@@ -106,7 +139,7 @@ void Tick_Tock(int time_ms)
     //Update current time
     t_now.Set_To_CurrentTime();
 
-    //determine time left
+    //Determine time left
     time_ms_raw_t wait_time = t_now.MilliSeconds_To(t_next);
 
     //Periodic Task
@@ -122,4 +155,11 @@ void Tick_Tock(int time_ms)
         LOG_WARNING("Overrun! (t=%d, t_now=%" PRIu64 ")", t, t_now.Get_Timestamp_ms());
         glutTimerFunc(150, Tick_Tock, 0);
     }
+}
+
+void Signal_Handler( int signum ) {
+    LOG_INFO("Interrupt signal (%d) received.",signum);
+
+    // terminate program
+    exit(signum);
 }
