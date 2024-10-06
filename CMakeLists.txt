@@ -5,11 +5,34 @@ add_subdirectory(Src)
 
 
 option(ENABLE_ADDRESS_SANITIZER "Address Sanitisation with libasan" OFF)
+option(ENABLE_PROFILING "gprof based profiling" ON)
+option(PROFILING_LINE_BY_LINE "Higher level of profiling detail" OFF)
+option(PROFILING_BLOCK_COUNTING "Count branch/block executions" OFF)
 
 if(ENABLE_ADDRESS_SANITIZER)
-add_compile_options(-fsanitize=address)
-add_link_options(-fsanitize=address)
+    add_compile_options(-fsanitize=address)
+    add_link_options(-fsanitize=address)
 endif(ENABLE_ADDRESS_SANITIZER)
+
+
+if(ENABLE_PROFILING)
+    if (UNIX)
+        #This is for unix-like systems e.g. linux.
+        add_compile_options(-pg)
+        add_link_options(-pg)
+        if(PROFILING_LINE_BY_LINE)
+            add_compile_options(-g)
+            add_link_options(-g)
+        endif(PROFILING_LINE_BY_LINE)
+        if(PROFILING_LINE_BY_LINE)
+            add_compile_options(-a)
+            add_link_options(-a)
+        endif(PROFILING_LINE_BY_LINE)
+    else()
+        message("If you're on Windows. Try using profiling tools built into VSCommunity instead. Or something else based on preference.")
+    endif (UNIX)
+endif(ENABLE_PROFILING)
+
 
 #Setting up Logging levels [todo] extract to different file (autogenerate in the future)
 set(Debug_Levels 
