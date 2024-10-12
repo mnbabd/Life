@@ -125,12 +125,12 @@ void Tick_Tock(int time_ms)
     }
 
     //Get current time
-    Time_Stamp t_now = Time_Stamp::Get_CurrentTime_Epoch_ms();
+    Time_Stamp t_now = Time_Stamp::Get_CurrentTime_Epoch_ms().load();
 
     //Determine next run
     Time_Stamp t_next = t_now + freq_ms;
     
-    LOG_VERBOSE("t_now=%" PRIu64 ", t=%u",t_now.Get_Timestamp_ms(), t);
+    LOG_VERBOSE("t_now=%" PRIu64 ", t=%u",t_now.Get_Timestamp_ms().load(), t);
     t++;
 
     //The Game
@@ -152,7 +152,7 @@ void Tick_Tock(int time_ms)
     }
     else
     {
-        LOG_WARNING("Overrun! (t=%d, t_now=%" PRIu64 ")", t, t_now.Get_Timestamp_ms());
+        LOG_WARNING("Overrun! (t=%d, t_now=%" PRIu64 ")", t, t_now.Get_Timestamp_ms().load());
         glutTimerFunc(150, Tick_Tock, 0);
     }
 }

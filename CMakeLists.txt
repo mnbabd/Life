@@ -72,7 +72,8 @@ add_executable(life ${Life_Includes} ${Life_Sources})
 if(MSVC)
 #-DGLUT_INCLUDE_DIR=${projectDir}\freeglut\include -DGLUT_glut_LIBRARY=${projectDir}\freeglut\lib
 set(GLUT_INCLUDE_DIR "${GLUT_DIR}/include")
-set(GLUT_glut_LIBRARY "${GLUT_DIR}/lib")
+set(GLUT_glut_LIBRARY "${GLUT_DIR}/lib/x64")
+#set(OPENGL_LIBRARY_DIR ${GLUT_DIR}/bin)
 else()
 find_package(GLUT REQUIRED)
 endif()
@@ -86,9 +87,13 @@ endif(NOT GLUT_FOUND)
 message("GLUT_INCLUDE_DIR = ${GLUT_INCLUDE_DIR}")
 include_directories(${GLUT_INCLUDE_DIR})
 
-target_sources(life PUBLIC ${GLUT_INCLUDE_DIR})
+file(GLOB SRC_FILES ${GLUT_INCLUDE_DIR}/*)
+target_sources(life PUBLIC ${SRC_FILES})
 
+if(MSVC)
 target_link_libraries(life 
-#openGL
-GLU GL glut
-)
+freeglut)
+else()
+target_link_libraries(life 
+GLU GL glut)
+endif()

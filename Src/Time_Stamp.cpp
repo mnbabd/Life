@@ -16,6 +16,7 @@
 
 
 #include "Time_Stamp.h"
+#include <chrono>
 
 #define DEFAULT_WRAPAROUND_DETECT_MS (2500)
 #define TIMESPEC_TO_MS(_TSPEC) ((_TSPEC.tv_sec * 1e3) + (_TSPEC.tv_nsec / 1e6))
@@ -35,7 +36,7 @@ Time_Stamp::Time_Stamp(time_ms_t epoch_ms)
 
 Time_Stamp::Time_Stamp(Time_Stamp &ts)
 {
-    Set_Timestamp_ms(ts.Get_Timestamp_ms());
+    Set_Timestamp_ms(ts.Get_Timestamp_ms().load());
 }
 
 time_ms_t Time_Stamp::Get_Timestamp_ms()
@@ -50,7 +51,7 @@ void Time_Stamp::Set_Timestamp_ms(time_ms_t ts_ms)
 
 void Time_Stamp::Set_To_CurrentTime()
 {
-    Set_Timestamp_ms(Get_CurrentTime_Epoch_ms());
+    Set_Timestamp_ms(Get_CurrentTime_Epoch_ms().load());
 }
 
 Time_Stamp Time_Stamp::operator+(Time_Stamp &rhs)
@@ -90,18 +91,22 @@ Time_Stamp Time_Stamp::operator+(time_ms_raw_t rhs)
 
 time_ms_t Time_Stamp::Get_CurrentTime_Epoch_ms()
 {
+#if UNIX
     struct timespec tv;
     clock_gettime(CLOCK_MONOTONIC, &tv);
 
     time_ms_raw_t t_ms = TIMESPEC_TO_MS(tv);
-
     return time_ms_t(t_ms);
+#else
+  return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+#endif
+
 }
 
 time_ms_t Time_Stamp::MilliSeconds_To(Time_Stamp &ts)
 {
     Time_Stamp &self = *this;
-    return (ts-self).Get_Timestamp_ms();
+    return (ts-self).Get_Timestamp_ms().load();
 }
 
 bool operator<(Time_Stamp &lhs, Time_Stamp &rhs)
