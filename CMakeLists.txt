@@ -67,17 +67,28 @@ else()
 endif()
 
 
+add_executable(life ${Life_Includes} ${Life_Sources})
+
+if(MSVC)
+#-DGLUT_INCLUDE_DIR=${projectDir}\freeglut\include -DGLUT_glut_LIBRARY=${projectDir}\freeglut\lib
+set(GLUT_INCLUDE_DIR "${GLUT_DIR}/include")
+set(GLUT_glut_LIBRARY "${GLUT_DIR}/lib")
+else()
 find_package(GLUT REQUIRED)
-    message(${GLUT_INCLUDE_DIR})
-    include_directories(${GLUT_INCLUDE_DIR})
-    if(NOT GLUT_FOUND)
-        message(ERROR "GLUT not found!")
-    endif(NOT GLUT_FOUND)
+endif()
 
 
-add_executable(life ${Life_Includes} ${Life_Sources} ${GLUT_INCLUDE_DIR})
+if(NOT GLUT_FOUND)
+    message(ERROR " GLUT not found!")
+    set(GLUT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/freeglut" CACHE STRING "Location of freeGLUT")
+endif(NOT GLUT_FOUND)
+
+message("GLUT_INCLUDE_DIR = ${GLUT_INCLUDE_DIR}")
+include_directories(${GLUT_INCLUDE_DIR})
+
+target_sources(life PUBLIC ${GLUT_INCLUDE_DIR})
+
 target_link_libraries(life 
-
 #openGL
 GLU GL glut
 )
