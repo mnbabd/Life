@@ -24,6 +24,7 @@ Feel free to create an issue on the repo
 
 # Install dependencies
 
+## Linux
 You will have most of these already installed.
 ```
 sudo pacman -Syu base-devel glibc libc++ libc++abi linux-api-headers freeglut mesa mesa-utils glu
@@ -33,6 +34,10 @@ Optional:
 ```
 sudo pacman -Syu glibc-debug
 ```
+
+## Windows
+https://freeglut.sourceforge.net/
+
 # Build
 ```
 mkdir build
