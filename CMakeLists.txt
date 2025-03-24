@@ -5,7 +5,7 @@ add_subdirectory(Src)
 
 
 option(ENABLE_ADDRESS_SANITIZER "Address Sanitisation with libasan" OFF)
-option(ENABLE_PROFILING "gprof based profiling" ON)
+option(ENABLE_PROFILING "gprof based profiling" OFF)
 option(PROFILING_LINE_BY_LINE "Higher level of profiling detail" OFF)
 option(PROFILING_BLOCK_COUNTING "Count branch/block executions" OFF)
 
@@ -67,13 +67,11 @@ else()
 endif()
 
 
-add_executable(life ${Life_Includes} ${Life_Sources})
-
 if(MSVC)
 #-DGLUT_INCLUDE_DIR=${projectDir}\freeglut\include -DGLUT_glut_LIBRARY=${projectDir}\freeglut\lib
 set(GLUT_INCLUDE_DIR "${GLUT_DIR}/include")
 set(GLUT_glut_LIBRARY "${GLUT_DIR}/lib/x64")
-#set(OPENGL_LIBRARY_DIR ${GLUT_DIR}/bin)
+# set(OPENGL_LIBRARY_DIR ${GLUT_DIR}/bin)
 else()
 find_package(GLUT REQUIRED)
 endif()
@@ -88,13 +86,19 @@ message("GLUT_INCLUDE_DIR = ${GLUT_INCLUDE_DIR}")
 include_directories(${GLUT_INCLUDE_DIR})
 
 file(GLOB SRC_FILES ${GLUT_INCLUDE_DIR}/*)
-target_sources(life PUBLIC ${SRC_FILES} ${GLUT_INCLUDE_DIR})
+# target_sources(life PUBLIC ${GLUT_INCLUDE_DIR})
+
+add_executable(life ${Life_Includes} ${Life_Sources} ${SRC_FILES})
+
 
 if(MSVC)
-# target_link_libraries(life 
-# freeglut)
-target_link_libraries(life PRIVATE "${GLUT_glut_LIBRARY}/freeglut.lib")
-
+target_link_libraries(life PRIVATE ${GLUT_glut_LIBRARY}/freeglut.lib)
+add_custom_command(TARGET life POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+        "${GLUT_DIR}/bin/x64/freeglut.dll"
+        "$<TARGET_FILE_DIR:life>/"
+    COMMENT "Copying DLL to output directory"
+)
 else()
 target_link_libraries(life 
 GLU GL glut)
