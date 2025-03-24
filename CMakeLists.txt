@@ -88,11 +88,13 @@ message("GLUT_INCLUDE_DIR = ${GLUT_INCLUDE_DIR}")
 include_directories(${GLUT_INCLUDE_DIR})
 
 file(GLOB SRC_FILES ${GLUT_INCLUDE_DIR}/*)
-target_sources(life PUBLIC ${SRC_FILES})
+target_sources(life PUBLIC ${SRC_FILES} ${GLUT_INCLUDE_DIR})
 
 if(MSVC)
-target_link_libraries(life 
-freeglut)
+# target_link_libraries(life 
+# freeglut)
+target_link_libraries(life PRIVATE "${GLUT_glut_LIBRARY}/freeglut.lib")
+
 else()
 target_link_libraries(life 
 GLU GL glut)
